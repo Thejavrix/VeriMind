@@ -21,20 +21,10 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { WalletConnect } from "@/components/wallet-connect";
+import { useAppStore } from "@/store/useAppStore";
 
-// Mock Data
-const recentMemories = [
-  { id: 1, title: "Q3 Strategy Document", type: "pdf", hash: "0x1a2b...3c4d", size: "2.4 MB", date: "2 hrs ago" },
-  { id: 2, title: "Engineering Sync", type: "text", hash: "0x8f9e...1a2b", size: "12 KB", date: "5 hrs ago" },
-  { id: 3, title: "Architecture Flow", type: "image", hash: "0x4c5d...6e7f", size: "1.1 MB", date: "1 day ago" },
-  { id: 4, title: "Seed Deck V2", type: "pdf", hash: "0x9a8b...7c6d", size: "4.8 MB", date: "2 days ago" },
-];
 
-const recentActivity = [
-  { id: 1, action: "Memory Stored", target: "Q3 Strategy Document", time: "2 hrs ago", status: "Verified on 0G Storage" },
-  { id: 2, action: "AI Inference", target: "Data Analysis Query", time: "4 hrs ago", status: "Confidence 99.2%" },
-  { id: 3, action: "Agent Spawned", target: "Research Assistant", time: "1 day ago", status: "Agentic ID Minted" },
-];
 
 const sidebarLinks = [
   { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard", active: true },
@@ -46,6 +36,19 @@ const sidebarLinks = [
 
 export default function DashboardPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { memories, activities } = useAppStore();
+
+  const totalStorage = memories.reduce((acc, m) => acc + m.sizeBytes, 0);
+  const formattedStorage = totalStorage > 1024 * 1024 * 1024 
+    ? `${(totalStorage / (1024 * 1024 * 1024)).toFixed(2)} GB` 
+    : `${(totalStorage / (1024 * 1024)).toFixed(2)} MB`;
+
+  const topStats = [
+    { label: "Memories Stored", value: memories.length.toString(), change: "Local App State", icon: Database, color: "text-blue-400" },
+    { label: "Verified Memories", value: memories.filter(m => m.status.includes('Verified')).length.toString(), change: "Cryptographic Proof", icon: ShieldCheck, color: "text-purple-400" },
+    { label: "Storage Used", value: formattedStorage, change: "On 0G Network", icon: Activity, color: "text-green-400" },
+    { label: "0G Transactions", value: activities.length.toString(), change: "On-Chain Settlements", icon: BrainCircuit, color: "text-orange-400" },
+  ];
 
   return (
     <div className="flex min-h-screen w-full bg-background selection:bg-white/20 text-foreground">
@@ -122,7 +125,7 @@ export default function DashboardPage() {
               <Bell className="h-5 w-5" />
               <span className="absolute top-2 right-2.5 h-1.5 w-1.5 rounded-full bg-primary" />
             </Button>
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 border border-white/20 shadow-inner cursor-pointer" />
+            <WalletConnect />
           </div>
         </header>
 
@@ -132,12 +135,7 @@ export default function DashboardPage() {
             
             {/* Top Stat Cards */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { label: "Memories Stored", value: "1,248", change: "+12% this week", icon: Database, color: "text-blue-400" },
-                { label: "Verified Memories", value: "1,248", change: "100% Cryptographic Proof", icon: ShieldCheck, color: "text-purple-400" },
-                { label: "Storage Used", value: "4.5 GB", change: "On 0G Network", icon: Activity, color: "text-green-400" },
-                { label: "0G Transactions", value: "8,942", change: "On-Chain Settlements", icon: BrainCircuit, color: "text-orange-400" },
-              ].map((stat, i) => (
+              {topStats.map((stat, i) => (
                 <motion.div
                   key={stat.label}
                   initial={{ opacity: 0, y: 10 }}
@@ -175,24 +173,22 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex-1 p-0">
                   <ul className="divide-y divide-white/5">
-                    {recentMemories.map((memory) => (
+                    {memories.slice(0, 5).map((memory) => (
                       <li key={memory.id} className="flex items-center justify-between p-5 hover:bg-white/[0.02] transition-colors group cursor-pointer">
                         <div className="flex items-center gap-4">
                           <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 group-hover:bg-white/10 transition-colors">
-                            {memory.type === "pdf" && <FileText className="h-4 w-4 text-red-400" />}
-                            {memory.type === "image" && <ImageIcon className="h-4 w-4 text-blue-400" />}
-                            {memory.type === "text" && <FileText className="h-4 w-4 text-white/60" />}
+                            <FileText className="h-4 w-4 text-white/60" />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-sm font-medium text-white/90">{memory.title}</span>
+                            <span className="text-sm font-medium text-white/90">{memory.name}</span>
                             <div className="flex items-center gap-2 mt-1">
-                              <span className="text-xs text-white/40">{memory.size}</span>
+                              <span className="text-xs text-white/40">{(memory.sizeBytes / 1024).toFixed(2)} KB</span>
                               <span className="w-1 h-1 rounded-full bg-white/20" />
-                              <span className="text-xs font-mono text-white/30 truncate w-24 sm:w-32">{memory.hash}</span>
+                              <span className="text-xs font-mono text-white/30 truncate w-24 sm:w-32">{memory.rootHash}</span>
                             </div>
                           </div>
                         </div>
-                        <span className="text-xs text-white/40 whitespace-nowrap hidden sm:block">{memory.date}</span>
+                        <span className="text-xs text-white/40 whitespace-nowrap hidden sm:block">{memory.uploadTime}</span>
                       </li>
                     ))}
                   </ul>
@@ -211,18 +207,18 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex-1 p-5">
                   <div className="relative border-l border-white/10 ml-3 space-y-8 pb-4">
-                    {recentActivity.map((activity, index) => (
+                    {activities.slice(0, 10).map((activity, index) => (
                       <div key={activity.id} className="relative pl-6">
                         <div className="absolute -left-1.5 top-1.5 h-3 w-3 rounded-full border-2 border-background bg-primary" />
                         <div className="flex flex-col gap-1">
                           <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium text-white/90">{activity.action}</span>
-                            <span className="text-xs text-white/40">{activity.time}</span>
+                            <span className="text-sm font-medium text-white/90">{activity.type}</span>
+                            <span className="text-xs text-white/40">{activity.timestamp}</span>
                           </div>
-                          <span className="text-sm text-white/60">{activity.target}</span>
-                          <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-green-500/20 bg-green-500/10 px-2 py-0.5 w-fit">
-                            <CheckCircle2 className="h-3 w-3 text-green-400" />
-                            <span className="text-[10px] font-medium text-green-400">{activity.status}</span>
+                          <span className="text-sm text-white/60">{activity.title}</span>
+                          <div className={`mt-2 inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 w-fit ${activity.isSuccess ? 'border-green-500/20 bg-green-500/10' : 'border-red-500/20 bg-red-500/10'}`}>
+                            <CheckCircle2 className={`h-3 w-3 ${activity.isSuccess ? 'text-green-400' : 'text-red-400'}`} />
+                            <span className={`text-[10px] font-medium ${activity.isSuccess ? 'text-green-400' : 'text-red-400'}`}>{activity.statusText}</span>
                           </div>
                         </div>
                       </div>
