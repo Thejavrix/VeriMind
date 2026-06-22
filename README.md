@@ -85,6 +85,6 @@ VeriMind leverages the official `@0gfoundation/0g-storage-ts-sdk` for a robust d
 - **Decentralized Storage**: 0G Storage SDK (`@0gfoundation/0g-storage-ts-sdk`)
 - **Blockchain**: ethers.js v6
 
-## 📜 License
+## 📄 License
 
-MIT License. See `LICENSE` for details.
+This project is licensed under the MIT License. See the LICENSE file for details.
