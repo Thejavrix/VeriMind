@@ -49,7 +49,12 @@ export class ZeroGStorageService {
 
       // 5. Execute on-chain payment and upload data chunks to storage nodes via Indexer
       // The SDK's upload method typically handles slicing and transaction tracking.
-      const tx = await indexer.upload(file, 0, this.rpcUrl, this.flowContractAddress, signer);
+      const [result, uploadErr] = await indexer.upload(file, this.rpcUrl, signer);
+      if (uploadErr) {
+        throw new Error(`Upload error: ${uploadErr.message}`);
+      }
+      
+      const tx = 'txHashes' in result ? result.txHashes[0] : result.txHash;
       
       return {
         success: true,

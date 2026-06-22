@@ -8,10 +8,12 @@ export interface FileCardProps {
   size: number;
   type: string;
   progress: number;
+  rootHash?: string;
+  timestamp?: string;
   onRemove: () => void;
 }
 
-export function FileCard({ name, size, type, progress, onRemove }: FileCardProps) {
+export function FileCard({ name, size, type, progress, rootHash, timestamp, onRemove }: FileCardProps) {
   // Determine icon based on file type
   const getIcon = () => {
     if (type.startsWith("image/")) return <ImageIcon className="h-6 w-6 text-blue-400" />;
@@ -26,6 +28,54 @@ export function FileCard({ name, size, type, progress, onRemove }: FileCardProps
   };
 
   const isComplete = progress === 100;
+
+  if (isComplete && rootHash) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        className="group relative flex flex-col gap-4 rounded-xl border border-primary/30 bg-primary/5 p-5 shadow-lg backdrop-blur-md overflow-hidden"
+      >
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
+              <CheckCircle2 className="h-5 w-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-white">Memory Stored</h4>
+              <p className="text-xs text-white/60">Status: <span className="text-green-400">Verified</span></p>
+            </div>
+          </div>
+          <button onClick={onRemove} className="text-white/40 hover:text-white transition-colors">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-y-3 gap-x-4 rounded-lg border border-white/5 bg-black/20 p-4 text-xs">
+          <div>
+            <span className="block text-white/40 mb-1">File</span>
+            <span className="font-medium text-white/90 truncate block">{name}</span>
+          </div>
+          <div>
+            <span className="block text-white/40 mb-1">Network</span>
+            <span className="font-medium text-white/90">0G Storage</span>
+          </div>
+          <div className="col-span-2">
+            <span className="block text-white/40 mb-1">Root Hash</span>
+            <span className="font-mono text-primary truncate block">{rootHash}</span>
+          </div>
+          <div className="col-span-2 flex items-center justify-between mt-1 pt-3 border-t border-white/5">
+            <span className="text-white/40">{timestamp || new Date().toLocaleString()}</span>
+            <button className="text-primary hover:text-primary/80 transition-colors font-medium">
+              View Details →
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div

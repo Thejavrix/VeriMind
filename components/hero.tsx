@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, ChevronRight, BrainCircuit } from "lucide-react";
+import { ArrowRight, ChevronRight, BrainCircuit, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Pre-calculated node positions and connections for the memory network
@@ -46,11 +46,18 @@ export function Hero() {
             </span>
           </h1>
 
-          <p className="text-lg md:text-xl text-white/60 mb-10 max-w-lg leading-relaxed text-balance">
-            Store your memories on 0G.<br />
-            Retrieve knowledge instantly.<br />
-            Every answer includes evidence and confidence.
+          <p className="text-lg md:text-xl text-white/80 mb-8 max-w-lg leading-relaxed text-balance">
+            Your AI remembers forever with verifiable memory powered by <span className="text-white font-semibold">0G</span>.
           </p>
+
+          <div className="flex flex-wrap gap-3 mb-10">
+            {["0G Storage", "Verifiable Memory", "Evidence Engine", "AI Memory OS"].map((badge) => (
+              <span key={badge} className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-medium text-white/70">
+                <Check className="h-3 w-3 text-primary" />
+                {badge}
+              </span>
+            ))}
+          </div>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <Button className="h-14 px-8 rounded-full bg-white text-black hover:bg-white/90 font-medium text-base transition-all hover:scale-105 active:scale-95 group">

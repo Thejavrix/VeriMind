@@ -18,6 +18,7 @@ import {
   Activity,
   Cpu,
   ChevronRight,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -132,10 +133,10 @@ export default function DashboardPage() {
             {/* Top Stat Cards */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {[
-                { label: "Total Memories", value: "1,248", change: "+12% this week", icon: Database, color: "text-blue-400" },
-                { label: "Active Agents", value: "3", change: "Agentic ID Verified", icon: Cpu, color: "text-purple-400" },
+                { label: "Memories Stored", value: "1,248", change: "+12% this week", icon: Database, color: "text-blue-400" },
+                { label: "Verified Memories", value: "1,248", change: "100% Cryptographic Proof", icon: ShieldCheck, color: "text-purple-400" },
                 { label: "Storage Used", value: "4.5 GB", change: "On 0G Network", icon: Activity, color: "text-green-400" },
-                { label: "Inferences", value: "8,942", change: "Verifiable compute", icon: BrainCircuit, color: "text-orange-400" },
+                { label: "0G Transactions", value: "8,942", change: "On-Chain Settlements", icon: BrainCircuit, color: "text-orange-400" },
               ].map((stat, i) => (
                 <motion.div
                   key={stat.label}

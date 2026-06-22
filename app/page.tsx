@@ -38,7 +38,7 @@ const flowSteps = [
 
 // Reusable spring configuration for ultra-smooth "Apple-like" feel
 const springTransition = {
-  type: "spring",
+  type: "spring" as const,
   stiffness: 100,
   damping: 20,
   mass: 1,
