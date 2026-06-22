@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronRight, BrainCircuit, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 // Pre-calculated node positions and connections for the memory network
 const networkNodes = [
@@ -60,9 +61,11 @@ export function Hero() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <Button className="h-14 px-8 rounded-full bg-white text-black hover:bg-white/90 font-medium text-base transition-all hover:scale-105 active:scale-95 group">
-              Launch Dashboard
-              <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+            <Button asChild className="h-14 px-8 rounded-full bg-white text-black hover:bg-white/90 font-medium text-base transition-all hover:scale-105 active:scale-95 group">
+              <Link href="/dashboard">
+                Launch Dashboard
+                <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </Link>
             </Button>
             <Button variant="outline" className="h-14 px-8 rounded-full border-white/10 bg-white/5 hover:bg-white/10 text-white font-medium text-base transition-all">
               View Architecture
