@@ -5,6 +5,7 @@ export interface Memory {
   name: string;
   sizeBytes: number;
   rootHash: string;
+  txHash?: string;
   uploadTime: string;
   status: 'Verified on 0G Storage' | 'Pending';
 }

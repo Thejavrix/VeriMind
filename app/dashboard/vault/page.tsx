@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { motion } from "framer-motion";
-import { UploadCloud, FileText, CheckCircle2, ShieldCheck, Database, Loader2 } from "lucide-react";
+import { UploadCloud, FileText, CheckCircle2, ShieldCheck, Database, Loader2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -58,6 +58,7 @@ export default function VaultPage() {
         name: file.name,
         sizeBytes: file.size,
         rootHash: result.rootHash,
+        txHash: result.txHash,
         uploadTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         status: 'Verified on 0G Storage'
       });
@@ -181,9 +182,22 @@ export default function VaultPage() {
                       <CheckCircle2 className="h-3 w-3 text-green-400" />
                       <span className="text-[10px] font-medium text-green-400">{memory.status}</span>
                     </div>
-                    <span className="text-xs font-mono text-white/30 truncate w-32 xl:w-48 text-right" title={memory.rootHash}>
-                      {memory.rootHash.substring(0, 8)}...{memory.rootHash.substring(memory.rootHash.length - 8)}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-mono text-white/30 truncate w-32 xl:w-48 text-right" title={memory.rootHash}>
+                        {memory.rootHash.substring(0, 8)}...{memory.rootHash.substring(memory.rootHash.length - 8)}
+                      </span>
+                      {memory.txHash && (
+                        <a 
+                          href={`https://scan-testnet.0g.ai/tx/${memory.txHash}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="p-1 rounded bg-white/5 hover:bg-white/10 transition-colors"
+                          title="View on 0G Explorer"
+                        >
+                          <ExternalLink className="h-3 w-3 text-primary" />
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </motion.div>
               ))}
